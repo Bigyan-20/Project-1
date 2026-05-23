@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bigyan Dhimal — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --card: #161616;
+    --card-hover: #1c1c1c;
+    --accent: #7F77DD;
+    --accent-dim: rgba(127,119,221,0.15);
+    --accent-light: #AFA9EC;
+    --tp: #efefef;
+    --ts: #777777;
+    --th: #444444;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(127,119,221,0.5);
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--tp);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+    z-index: 9999;
+  }
+  .cursor.big { width: 32px; height: 32px; background: var(--accent-dim); border: 1px solid var(--accent); }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 3rem;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-size: 18px; font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 12px; color: var(--ts); text-decoration: none;
+    letter-spacing: 1px; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--tp); }
+
+  /* SECTIONS */
+  section { padding: 5rem 3rem; border-bottom: 0.5px solid var(--border); }
+
+  /* HERO */
+  .hero {
+    min-height: 90vh;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+    padding-top: 3rem; padding-bottom: 3rem;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-tag {
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-tag::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--accent);
+  }
+  .hero-name {
+    font-family: var(--font-head);
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-name .accent { color: var(--accent); }
+  .hero-sub {
+    font-size: 14px; color: var(--ts);
+    max-width: 460px; line-height: 1.9;
+    margin-bottom: 2.5rem;
+  }
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    border: none; padding: 11px 26px;
+    border-radius: 6px; font-family: var(--font-mono);
+    font-size: 12px; font-weight: 500;
+    cursor: none; letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: var(--tp);
+    border: 0.5px solid var(--th); padding: 11px 26px;
+    border-radius: 6px; font-family: var(--font-mono);
+    font-size: 12px; cursor: none; letter-spacing: 0.5px;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .hero-scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 3rem;
+    font-size: 11px; color: var(--th); letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-scroll-hint::after {
+    content: ''; display: inline-block;
+    width: 40px; height: 1px; background: var(--th);
+    animation: scrollLine 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%,100% { transform: scaleX(1); opacity: 1; }
+    50% { transform: scaleX(0.4); opacity: 0.4; }
+  }
+
+  /* SECTION LABELS */
+  .sec-label {
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec-label::before {
+    content: '//'; color: var(--th); font-size: 12px;
+  }
+  .sec-title {
+    font-family: var(--font-head);
+    font-size: 32px; font-weight: 700;
+    margin-bottom: 2rem; letter-spacing: -0.5px;
+  }
+
+  /* ABOUT */
+  .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .about-text { font-size: 14px; color: var(--ts); line-height: 1.9; }
+  .about-text p + p { margin-top: 1rem; }
+  .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px; padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 28px; font-weight: 700; color: var(--accent);
+  }
+  .stat-label { font-size: 11px; color: var(--ts); margin-top: 4px; letter-spacing: 1px; }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .skill-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px; padding: 1.2rem 1.4rem;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--card-hover); }
+  .skill-icon { font-size: 22px; color: var(--accent); margin-bottom: 10px; }
+  .skill-name { font-family: var(--font-head); font-size: 14px; font-weight: 500; }
+  .skill-level { font-size: 11px; color: var(--ts); margin-top: 4px; letter-spacing: 1px; }
+  .skill-bar-bg { background: rgba(255,255,255,0.06); border-radius: 99px; height: 2px; margin-top: 10px; }
+  .skill-bar-fill { height: 2px; border-radius: 99px; background: var(--accent); transition: width 1.2s cubic-bezier(0.4,0,0.2,1); width: 0; }
+
+  /* PROJECTS */
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+  .proj-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px; padding: 1.4rem;
+    cursor: none;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  }
+  .proj-card:hover { border-color: var(--accent); transform: translateY(-3px); background: var(--card-hover); }
+  .proj-card.active { border-color: var(--accent); border-width: 1px; }
+  .proj-tag {
+    display: inline-block;
+    background: var(--accent-dim); color: var(--accent-light);
+    font-size: 10px; padding: 3px 10px; border-radius: 99px;
+    margin-bottom: 12px; letter-spacing: 1px;
+  }
+  .proj-title { font-family: var(--font-head); font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .proj-desc { font-size: 12px; color: var(--ts); line-height: 1.7; }
+  .proj-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .stack { display: flex; gap: 5px; flex-wrap: wrap; }
+  .pill { font-size: 10px; color: var(--ts); border: 0.5px solid var(--border); border-radius: 99px; padding: 2px 8px; }
+  .open-btn { font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 4px; }
+
+  /* PREVIEW */
+  .preview-area {
+    margin-top: 1.5rem;
+    border: 0.5px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    background: var(--surface);
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .preview-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 1.2rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .preview-dots { display: flex; gap: 6px; }
+  .preview-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--th); }
+  .preview-dots span:first-child { background: #E24B4A; }
+  .preview-dots span:nth-child(2) { background: #BA7517; }
+  .preview-dots span:nth-child(3) { background: #1D9E75; }
+  .preview-title { font-size: 12px; color: var(--ts); letter-spacing: 1px; }
+  .close-btn { background: transparent; border: none; color: var(--ts); cursor: none; font-size: 18px; line-height: 1; transition: color 0.2s; }
+  .close-btn:hover { color: var(--tp); }
+  .preview-body { padding: 1.5rem; }
+  .app-frame { background: #0d0d0d; border-radius: 10px; padding: 1.4rem; border: 0.5px solid var(--border); }
+
+  /* TODO APP */
+  .todo-input-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .todo-input {
+    flex: 1; background: #1c1c1c; border: 0.5px solid var(--border);
+    border-radius: 8px; padding: 9px 12px;
+    color: var(--tp); font-family: var(--font-mono); font-size: 13px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .todo-input:focus { border-color: var(--accent); }
+  .add-btn {
+    background: var(--accent); border: none; color: #fff;
+    border-radius: 8px; padding: 9px 16px;
+    font-family: var(--font-mono); font-size: 12px; cursor: none; font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .add-btn:hover { opacity: 0.85; }
+  .todo-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border); }
+  .todo-check {
+    width: 17px; height: 17px; border-radius: 5px;
+    border: 1.5px solid var(--accent); cursor: none;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .todo-check.done { background: var(--accent); }
+  .todo-text { font-size: 13px; flex: 1; transition: color 0.2s; }
+  .todo-text.done { text-decoration: line-through; color: var(--ts); }
+  .todo-del { background: transparent; border: none; color: var(--ts); cursor: none; font-size: 16px; transition: color 0.2s; }
+  .todo-del:hover { color: #E24B4A; }
+
+  /* CALCULATOR */
+  .calc-display { background: #080808; border-radius: 8px; padding: 1rem 1.2rem; text-align: right; margin-bottom: 14px; }
+  .calc-expr { font-size: 12px; color: var(--ts); min-height: 18px; }
+  .calc-num { font-family: var(--font-head); font-size: 32px; font-weight: 700; color: var(--tp); }
+  .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .calc-btn {
+    background: #1e1e1e; border: none; color: var(--tp);
+    border-radius: 8px; padding: 14px;
+    font-family: var(--font-mono); font-size: 14px; cursor: none;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .calc-btn:hover { background: #2a2a2a; }
+  .calc-btn:active { transform: scale(0.95); }
+  .calc-btn.op { color: var(--accent); }
+  .calc-btn.eq { background: var(--accent); color: #fff; }
+  .calc-btn.eq:hover { opacity: 0.85; }
+  .calc-btn.span2 { grid-column: span 2; }
+
+  /* QUIZ */
+  .quiz-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .quiz-progress { font-size: 11px; color: var(--ts); letter-spacing: 1px; }
+  .quiz-score { font-size: 11px; color: var(--accent); letter-spacing: 1px; }
+  .quiz-progress-bar-bg { background: rgba(255,255,255,0.06); border-radius: 99px; height: 2px; margin-bottom: 1.2rem; }
+  .quiz-progress-bar { height: 2px; border-radius: 99px; background: var(--accent); transition: width 0.4s ease; }
+  .quiz-q { font-family: var(--font-head); font-size: 15px; font-weight: 500; margin-bottom: 1.2rem; line-height: 1.5; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: #1c1c1c; border: 0.5px solid var(--border);
+    border-radius: 8px; padding: 11px 16px;
+    font-family: var(--font-mono); font-size: 13px; color: var(--tp);
+    cursor: none; transition: border-color 0.15s, background 0.15s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--accent); background: #222; }
+  .quiz-opt.correct { border-color: #1D9E75; background: rgba(29,158,117,0.1); color: #5DCAA5; }
+  .quiz-opt.wrong { border-color: #E24B4A; background: rgba(226,75,74,0.08); color: #F09595; }
+  .next-btn {
+    margin-top: 1rem; background: var(--accent); border: none; color: #fff;
+    border-radius: 8px; padding: 9px 20px;
+    font-family: var(--font-mono); font-size: 12px; cursor: none; font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .next-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 2.5rem;
+    font-size: 11px; color: var(--th); letter-spacing: 2px;
+  }
+  footer span { color: var(--accent); }
+
+  /* ANIMATIONS */
+  .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    section { padding: 3.5rem 1.5rem; }
+    .hero-scroll-hint { left: 1.5rem; }
+    .about-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <div class="nav-logo">BD</div>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">portfolio — 2025</div>
+  <h1 class="hero-name">
+    Hi, I'm<br><span class="accent">Bigyan Dhimal</span>
+  </h1>
+  <p class="hero-sub">
+    A beginner web developer exploring the world of HTML, CSS, JavaScript & Python — one project at a time. Building, learning, growing.
+  </p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
+    <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About Me</button>
+  </div>
+  <div class="hero-scroll-hint">scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-label">who I am</div>
+  <h2 class="sec-title">About me</h2>
+  <div class="about-layout fade-up">
+    <div class="about-text">
+      <p>I'm Bigyan Dhimal, a passionate beginner in web development based in Kathmandu, Nepal. I love building things for the web and am currently mastering the fundamentals of HTML, CSS, and JavaScript.</p>
+      <p>On the side, I'm also exploring Python to understand programming logic more deeply. I believe in learning by doing — every project, no matter how small, teaches me something valuable.</p>
+      <p>Currently in my learning phase, I'm focused on building real projects that solve real problems, one line of code at a time.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Projects built</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Technologies</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Self-taught</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Curiosity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-label">what I know</div>
+  <h2 class="sec-title">Skills</h2>
+  <div class="skills-grid fade-up">
+    <div class="skill-card">
+      <div class="skill-icon">&#60;/&#62;</div>
+      <div class="skill-name">HTML</div>
+      <div class="skill-level">Beginner</div>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="55"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">&#123;&#125;</div>
+      <div class="skill-name">CSS</div>
+      <div class="skill-level">Beginner</div>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="50"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">JS</div>
+      <div class="skill-name">JavaScript</div>
+      <div class="skill-level">Learning</div>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="35"></div></div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">Py</div>
+      <div class="skill-name">Python</div>
+      <div class="skill-level">Exploring</div>
+      <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="25"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-label">what I've built</div>
+  <h2 class="sec-title">Projects</h2>
+  <div class="proj-grid fade-up">
+    <div class="proj-card" id="card-todo" onclick="openProject('todo')">
+      <div class="proj-tag">interactive</div>
+      <div class="proj-title">To-Do List</div>
+      <div class="proj-desc">Manage daily tasks with add, complete, and delete functionality.</div>
+      <div class="proj-footer">
+        <div class="stack"><span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JS</span></div>
+        <div class="open-btn">&#9656; preview</div>
+      </div>
+    </div>
+    <div class="proj-card" id="card-calc" onclick="openProject('calc')">
+      <div class="proj-tag">interactive</div>
+      <div class="proj-title">Calculator</div>
+      <div class="proj-desc">A clean calculator with all basic arithmetic operations.</div>
+      <div class="proj-footer">
+        <div class="stack"><span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JS</span></div>
+        <div class="open-btn">&#9656; preview</div>
+      </div>
+    </div>
+    <div class="proj-card" id="card-quiz" onclick="openProject('quiz')">
+      <div class="proj-tag">interactive</div>
+      <div class="proj-title">Quiz App</div>
+      <div class="proj-desc">Interactive quiz with score tracking and instant feedback.</div>
+      <div class="proj-footer">
+        <div class="stack"><span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JS</span></div>
+        <div class="open-btn">&#9656; preview</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-area" id="preview">
+    <div class="preview-header">
+      <div class="preview-dots"><span></span><span></span><span></span></div>
+      <div class="preview-title" id="preview-title"></div>
+      <button class="close-btn" onclick="closeProject()">&#215;</button>
+    </div>
+    <div class="preview-body" id="preview-body"></div>
+  </div>
+</section>
+
+<footer>
+  built with curiosity by <span>Bigyan Dhimal</span> &mdash; 2025
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.proj-card,.skill-card,.stat-card,.todo-check').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('skills-grid') || e.target.closest('.skills-grid')) {
+        document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+      }
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+setTimeout(() => {
+  document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+    bar.style.width = bar.dataset.width + '%';
+  });
+}, 800);
+
+const todos = [
+  { text: 'Learn HTML basics', done: true },
+  { text: 'Build my first webpage', done: true },
+  { text: 'Practice CSS flexbox', done: false },
+  { text: 'Start JavaScript', done: false }
+];
+let calcExpr = '', calcVal = '0';
+const questions = [
+  { q: 'Which language runs natively in the browser?', opts: ['Python', 'JavaScript', 'PHP', 'Ruby'], ans: 1 },
+  { q: 'What does CSS stand for?', opts: ['Creative Style Sheets', 'Cascading Style Sheets', 'Computer Style Sheets', 'Colorful Style Sheets'], ans: 1 },
+  { q: 'Which HTML tag is used for the largest heading?', opts: ['<h6>', '<head>', '<h1>', '<heading>'], ans: 2 },
+  { q: 'Which symbol starts a single-line comment in JavaScript?', opts: ['#', '//', '/*', '--'], ans: 1 },
+];
+let qIdx = 0, score = 0, answered = false;
+
+function openProject(id) {
+  document.querySelectorAll('.proj-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-' + id).classList.add('active');
+  const p = document.getElementById('preview');
+  const title = document.getElementById('preview-title');
+  const body = document.getElementById('preview-body');
+  p.style.display = 'block';
+  if (id === 'todo') { title.textContent = 'todo-list.html'; body.innerHTML = renderTodo(); }
+  else if (id === 'calc') { title.textContent = 'calculator.html'; calcExpr = ''; calcVal = '0'; body.innerHTML = renderCalc(); }
+  else if (id === 'quiz') { title.textContent = 'quiz-app.html'; qIdx = 0; score = 0; answered = false; body.innerHTML = renderQuiz(); }
+  p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeProject() {
+  document.getElementById('preview').style.display = 'none';
+  document.querySelectorAll('.proj-card').forEach(c => c.classList.remove('active'));
+}
+
+function renderTodo() {
+  const items = todos.map((t, i) => `
+    <div class="todo-item">
+      <div class="todo-check ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">
+        ${t.done ? '<span style="font-size:11px;color:#fff;">&#10003;</span>' : ''}
+      </div>
+      <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
+      <button class="todo-del" onclick="deleteTodo(${i})">&#10005;</button>
+    </div>`).join('');
+  return `<div class="app-frame">
+    <div class="todo-input-row">
+      <input class="todo-input" id="todo-inp" placeholder="Add a new task..." onkeydown="if(event.key==='Enter')addTodo()">
+      <button class="add-btn" onclick="addTodo()">+ Add</button>
+    </div>
+    <div id="todo-list">${items}</div>
+  </div>`;
+}
+
+function addTodo() {
+  const inp = document.getElementById('todo-inp');
+  if (!inp || !inp.value.trim()) return;
+  todos.push({ text: inp.value.trim(), done: false });
+  inp.value = '';
+  document.getElementById('todo-list').innerHTML = todos.map((t, i) => `
+    <div class="todo-item">
+      <div class="todo-check ${t.done ? 'done' : ''}" onclick="toggleTodo(${i})">
+        ${t.done ? '<span style="font-size:11px;color:#fff;">&#10003;</span>' : ''}
+      </div>
+      <span class="todo-text ${t.done ? 'done' : ''}">${t.text}</span>
+      <button class="todo-del" onclick="deleteTodo(${i})">&#10005;</button>
+    </div>`).join('');
+}
+
+function toggleTodo(i) {
+  todos[i].done = !todos[i].done;
+  document.getElementById('preview-body').innerHTML = renderTodo();
+}
+
+function deleteTodo(i) {
+  todos.splice(i, 1);
+  document.getElementById('preview-body').innerHTML = renderTodo();
+}
+
+function renderCalc() {
+  return `<div class="app-frame" style="max-width:280px;margin:0 auto;">
+    <div class="calc-display">
+      <div class="calc-expr" id="cexpr">${calcExpr}</div>
+      <div class="calc-num" id="cval">${calcVal}</div>
+    </div>
+    <div class="calc-grid">
+      <button class="calc-btn op" onclick="calcAct('C')">C</button>
+      <button class="calc-btn op" onclick="calcAct('+/-')">+/-</button>
+      <button class="calc-btn op" onclick="calcAct('%')">%</button>
+      <button class="calc-btn op" onclick="calcAct('/')">&#247;</button>
+      <button class="calc-btn" onclick="calcAct('7')">7</button>
+      <button class="calc-btn" onclick="calcAct('8')">8</button>
+      <button class="calc-btn" onclick="calcAct('9')">9</button>
+      <button class="calc-btn op" onclick="calcAct('*')">&#215;</button>
+      <button class="calc-btn" onclick="calcAct('4')">4</button>
+      <button class="calc-btn" onclick="calcAct('5')">5</button>
+      <button class="calc-btn" onclick="calcAct('6')">6</button>
+      <button class="calc-btn op" onclick="calcAct('-')">&#8722;</button>
+      <button class="calc-btn" onclick="calcAct('1')">1</button>
+      <button class="calc-btn" onclick="calcAct('2')">2</button>
+      <button class="calc-btn" onclick="calcAct('3')">3</button>
+      <button class="calc-btn op" onclick="calcAct('+')">+</button>
+      <button class="calc-btn span2" onclick="calcAct('0')">0</button>
+      <button class="calc-btn" onclick="calcAct('.')">.</button>
+      <button class="calc-btn eq" onclick="calcAct('=')">=</button>
+    </div>
+  </div>`;
+}
+
+function calcAct(v) {
+  if (v === 'C') { calcExpr = ''; calcVal = '0'; }
+  else if (v === '+/-') { calcVal = calcVal.startsWith('-') ? calcVal.slice(1) : '-' + calcVal; }
+  else if (v === '%') { calcVal = String(parseFloat(calcVal) / 100); }
+  else if (v === '=') {
+    try {
+      let r = Function('"use strict";return (' + calcExpr + calcVal + ')')();
+      calcExpr = '';
+      calcVal = parseFloat(r.toFixed(10)).toString();
+    } catch { calcVal = 'Error'; }
+  }
+  else if (['+', '-', '*', '/'].includes(v)) { calcExpr += calcVal + v; calcVal = '0'; }
+  else { calcVal = calcVal === '0' && v !== '.' ? v : calcVal + v; }
+  const ce = document.getElementById('cexpr');
+  const cv = document.getElementById('cval');
+  if (ce) ce.textContent = calcExpr;
+  if (cv) cv.textContent = calcVal;
+}
+
+function renderQuiz() {
+  const q = questions[qIdx];
+  const pct = Math.round((qIdx / questions.length) * 100);
+  return `<div class="app-frame">
+    <div class="quiz-bar">
+      <div class="quiz-progress">Question ${qIdx + 1} of ${questions.length}</div>
+      <div class="quiz-score">Score: ${score}</div>
+    </div>
+    <div class="quiz-progress-bar-bg">
+      <div class="quiz-progress-bar" style="width:${pct}%"></div>
+    </div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">
+      ${q.opts.map((o, i) => `<button class="quiz-opt" id="opt${i}" onclick="answerQuiz(${i})">${o}</button>`).join('')}
+    </div>
+    <div id="quiz-next"></div>
+  </div>`;
+}
+
+function answerQuiz(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  document.querySelectorAll('.quiz-opt')[q.ans].classList.add('correct');
+  if (i !== q.ans) document.querySelectorAll('.quiz-opt')[i].classList.add('wrong');
+  else score++;
+  const nxt = document.getElementById('quiz-next');
+  if (qIdx < questions.length - 1) {
+    nxt.innerHTML = `<button class="next-btn" onclick="nextQuestion()">Next &#8594;</button>`;
+  } else {
+    nxt.innerHTML = `<div style="margin-top:1.2rem;text-align:center;">
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--accent);">${score}/${questions.length}</div>
+      <div style="font-size:12px;color:var(--ts);margin-top:6px;letter-spacing:1px;">${score === questions.length ? 'perfect score!' : score >= 2 ? 'good job!' : 'keep practicing!'}</div>
+      <button class="next-btn" style="margin-top:12px" onclick="restartQuiz()">&#8635; Restart</button>
+    </div>`;
+  }
+}
+
+function nextQuestion() { qIdx++; answered = false; document.getElementById('preview-body').innerHTML = renderQuiz(); }
+function restartQuiz() { qIdx = 0; score = 0; answered = false; document.getElementById('preview-body').innerHTML = renderQuiz(); }
+</script>
+</body>
+</html>
