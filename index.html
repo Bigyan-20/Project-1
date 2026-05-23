@@ -86,8 +86,8 @@
   .hero-grid-bg {
     position: absolute; inset: 0; pointer-events: none;
     background-image:
-      linear-gradient(rgba(127,119,221,0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(127,119,221,0.12) 1px, transparent 1px);
+      linear-gradient(rgba(127,119,221,0.25) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,119,221,0.25) 1px, transparent 1px);
     background-size: 50px 50px;
   }
   #dust-canvas {
@@ -360,18 +360,14 @@
 <section class="hero" id="home">
   <div class="hero-grid-bg"></div>
   <canvas id="dust-canvas"></canvas>
-  <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:0;">
-  <div class="hero-tag">portfolio — 2025</div>
-  <h1 class="hero-name">
-    Hi, I'm<br><span class="accent">Bigyan Dhimal</span>
-  </h1>
-  <p class="hero-sub">
-    A beginner web developer exploring the world of HTML, CSS, JavaScript & Python — one project at a time. Building, learning, growing.
-  </p>
-  <div class="hero-btns">
-    <button class="btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
-    <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About Me</button>
-  </div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;gap:1rem;">
+    <div class="hero-tag">portfolio — 2025</div>
+    <h1 class="hero-name">Hi, I'm<br><span class="accent">Bigyan Dhimal</span></h1>
+    <p class="hero-sub">A beginner web developer exploring the world of HTML, CSS, JavaScript & Python — one project at a time. Building, learning, growing.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
+      <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About Me</button>
+    </div>
   </div>
   <div class="hero-scroll-hint">scroll</div>
 </section>
